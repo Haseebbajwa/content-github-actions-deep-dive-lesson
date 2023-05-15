@@ -45,7 +45,24 @@ jobs:
           aws-region: us-east-1
       - name: upload to S3
         run: aws s3 cp ${{ github.sha }}.zip s3://git-bucket-13451/${{ github.sha }}.zip
-
+  deploy:
+    runs-on: ubuntu-latest
+    needs: upload
+    steps:
+      - name: Configure AWS CREDENTIAL
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+            aws-region: us-east-1
+      - name: update lambda funtction
+        run: |
+            aws lambda update-function-code \
+              --function-name test-lambda \
+              --s3-bucket git-bucket-13451 \
+              --s3-key ${{ github.sha }}.zip \
+              --publish
+    
 
 
 
