@@ -36,7 +36,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          - name: zipped-bundle
+          name: zipped-bundle
       - name: Configure AWS CREDENTIAL
         uses: aws-actions/configure-aws-credentials@v1
         with:
